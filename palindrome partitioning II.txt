@@ -1,0 +1,69 @@
+
+#Question
+/*
+Given a string A, partition A such that every substring of the partition is a palindrome.
+
+Return the minimum cuts needed for a palindrome partitioning of A.
+
+
+
+Input Format:
+
+The first and the only argument contains the string A.
+Output Format:
+
+Return an integer, representing the answer as described in the problem statement.
+Constraints:
+
+1 <= length(A) <= 501
+Examples:
+
+Input 1:
+    A = "aba"
+
+Output 1:
+    0
+
+Explanation 1:
+    "aba" is already a palindrome, so no cuts are needed.
+
+Input 2:
+    A = "aab"
+    
+Output 2:
+    1
+
+Explanation 2:
+    Return 1 since the palindrome partitioning ["aa","b"] could be produced using 1 cut.
+Note:You only need to implement the given function. Do not read input, instead use the arguments to the function. Do not print the output, instead return values as specified. Still have a question? Checkout Sample Codes for more details.
+
+*/
+
+
+#Hint:
+/*
+Firstly, we should be able to answer if substring [i,i+1,….j] is palindrome or not in O(1) with pre-computation of O(n^2).
+
+Now try to come up with some DP state which can find minimum cut using above data.
+*/
+
+#Problem Solution 
+
+class Solution:
+    # @param A : string
+    # @return an integer
+    def minCut(self, s):
+        if len(s) == 0: return 0
+        n = len(s)
+        dp = [[False for x in range(n)] for x in range(n)]
+        d = [0 for x in range(n)]
+        for i in range(n-1,-1,-1):
+            d[i] = n-i-1
+            for j in range(i,n):
+                if s[i] == s[j] and (j-i < 2 or dp[i+1][j-1]):
+                    dp[i][j] = True
+                    if j == n-1:
+                        d[i] = 0
+                    elif d[j+1] + 1 < d[i]:
+                        d[i] = d[j+1] + 1
+        return d[0]
